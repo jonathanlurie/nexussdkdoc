@@ -1,0 +1,22 @@
+{
+  "root": ".",
+  "title": "Nexus SDK and CLI",
+  "plugins": ["insert-logo", "favicon", "expandable-chapters", "hide-published-with"],
+
+  "pluginsConfig": {
+
+    "insert-logo": {
+      "url": "/images/logo.png"
+    },
+
+    "favicon":{
+      "shortcut": "/images/favicon.png",
+      "bookmark": "/images/favicon.png",
+      "appleTouch": "/images/favicon.png",
+      "appleTouchMore": {
+        "120x120": "/images/favicon.png",
+        "180x180": "/images/favicon.png"
+      }
+    }
+  }
+}
