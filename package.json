@@ -4,6 +4,7 @@
   "description": "Cookbook for PixpipeJS in a form of a GitBook",
   "main": "index.js",
   "scripts": {
+    "install2": "gitbook install",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "gitbook build book docs",
     "dev": "gitbook serve book docs"

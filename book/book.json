@@ -6,7 +6,7 @@
   "pluginsConfig": {
 
     "insert-logo": {
-      "url": "/images/logo.png"
+      "url": "https://bluebrain.github.io/nexus/assets/img/logo.png"
     },
 
     "favicon":{
