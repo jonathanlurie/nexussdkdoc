@@ -1,5 +1,5 @@
 # Organizations
-An *organization* is used to organize and categorize its sub-resources. An organization can contain [*projects*](./3-projects.md).  
+An *organization* is used to organize and categorize its sub-resources. An organization can contain [*projects*](./projects.md).  
 All the functions related to organization exposed in the SDK are in the `organization` package. You can use this package this way:
 ```python
 import nexussdk as nexus
