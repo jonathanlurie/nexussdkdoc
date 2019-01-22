@@ -14,7 +14,9 @@ nexus.tools.pretty_print(payload)
 In this example, `"my_org"` is the name of the organization that will host the project. The organization must exist. The second argument: `"my_project"` is the name you want to give to your project.
 
 In addition, the `.create()` function can take an optional argument:
-- **config** *dict*: Can include data such as `name`, `base` or `apiMappings` see the [API doc](https://bluebrain.github.io/nexus/docs/api/admin/admin-projects-api.html#create-a-project) for more info
+- **description** *string*: if you want to provide a description to your project
+- **api_mappings** *list*: custom api mapping, see more [here](https://bluebrain.github.io/nexus/docs/api/admin/admin-projects-api.html#api-mappings)
+- **vocab** *string*: vocab string
 
 
 ## List projects
@@ -48,7 +50,7 @@ The returned value is a *dictionary* containing the list of projects.
 **Note** that each project entry contains partial informations about each project. To the whole set of data for a given project, use the [`.fetch()`](./organizations.md#fetch-a-project) function.
 
 
-# Fetch a project
+## Fetch a project
 Fetching a project means getting all the data and metadata related to this particular project. Though, it does **not** fetch the resources bound to this project (to fetch resource, go to the [resource section](./resource.md)).
 
 Since a project belongs to an organization, the `.fetch()` function requires this information:
@@ -60,3 +62,44 @@ nexus.tools.pretty_print(payload)
 ```
 Additionally, you can use:
 - **rev** *int*: The specific revision of the wanted project. If not provided, will get the last
+
+
+## Update a project
+To update q project, yo must first `.fetch()` it. Then, you can modify the payload to update the dictionary fields you want to change, and then inject this modified dictionary into the `.update()` function:
+
+```python
+# Needed as a prior step
+project_payload = nexus.projects.fetch("my_org", "my_project")
+
+# Add some edits to the project data
+project_payload["apiMappings"] = ["the", "foo", "bar", "of", "john", "doe"]
+
+# finally, you update
+payload = nexus.projects.update(project_payload)
+
+# pretty print
+nexus.tools.pretty_print(payload)
+```
+In addition, you can specify:
+- **rev** *int*: The API needs to make sure you are modifying the last revision of the project. The SDK makes this optional by looking into the payload provided in argument.
+
+**IMPORTANT:** At the moment you modify the first payload, you should not use it for anything else as the *revision number* will not be updated. To get the truly updated version of the project, **you must fetch it again**.
+
+
+## Deprecate a project
+Nexus does not allow to delete anything, including projects. Deprecating a project simply makes it un-writable and resources can no longer be added to a deprecated project.
+
+Exactly like for `.update()`, you need first to provide a `.fetch()ed` payload of a *project*:
+```python
+# Needed as a prior step
+payload = nexus.projects.fetch("my_org", "my_project")
+
+# then, deprecate it
+payload = nexus.projects.update(payload)
+
+# pretty print
+nexus.tools.pretty_print(payload)
+```
+
+In addition, the `.update()` function can take the optional argument:
+- **rev** *int*: The API needs to make sure you are deprecating the last revision of the project. The SDK makes this optional by looking into the payload provided in argument.

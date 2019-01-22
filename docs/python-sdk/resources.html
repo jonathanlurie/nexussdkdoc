@@ -399,8 +399,39 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="resource">Resource</h1>
-<p>TODO</p>
+                                <h1 id="resources">Resources</h1>
+<p>Resources are how Nexus stores JSON structured data within a <a href="projects.html">project</a>. A resource can be large or small, stores <em>strings</em>, <em>number</em>, <em>booleans</em>, <em>array</em> and <em>composite objects</em>. In addition, just like every other entity in Nexus, some metadata will be added.<br>Just like <em>organizations</em> and <em>projects</em>, a resource will have metadata regarding its creator, date of creation, a <em>deprecated</em> flag, etc. In addition, a resource can be <em>tagged</em> and fetched based on a specific tag.</p>
+<blockquote>
+<p>Note: If you want to store <em>files</em> rather than than objects, look into the <a href="files.html">file section</a>.</p>
+</blockquote>
+<h2 id="create-a-resource">Create a resource</h2>
+<pre><code class="lang-python"><span class="hljs-comment"># Your data to put on Nexus</span>
+data = {
+    <span class="hljs-string">&quot;firstname&quot;</span>: <span class="hljs-string">&quot;Johnny&quot;</span>,
+    <span class="hljs-string">&quot;lastname&quot;</span>: <span class="hljs-string">&quot;Bravo&quot;</span>
+}
+
+payload = nexus.resources.create(<span class="hljs-string">&apos;my_org&apos;</span>, <span class="hljs-string">&apos;my_project&apos;</span>, data)
+
+<span class="hljs-comment"># Pretty print</span>
+nexus.tools.pretty_print(payload)
+</code></pre>
+<p>In Nexus, everything is identify by a <code>@id</code> key. Here, the resource is created and the <code>@id</code> is automatically given by Nexus. In some cases, you want to provide the <em>id</em> yourself, especially if you already have an indexing system of your own and all your data rely on these ids. Then, just add the id:</p>
+<pre><code class="lang-python"><span class="hljs-comment"># Your data to put on Nexus</span>
+data = {
+    <span class="hljs-string">&quot;firstname&quot;</span>: <span class="hljs-string">&quot;Johnny&quot;</span>,
+    <span class="hljs-string">&quot;lastname&quot;</span>: <span class="hljs-string">&quot;Bravo&quot;</span>
+}
+
+payload = nexus.resources.create(<span class="hljs-string">&apos;my_org&apos;</span>, <span class="hljs-string">&apos;my_project&apos;</span>, data, id=<span class="hljs-string">&quot;the-fancy-id-i-absolutely-need&quot;</span>)
+
+<span class="hljs-comment"># Pretty print</span>
+nexus.tools.pretty_print(payload)
+</code></pre>
+<h2 id="list-a-resource">List a resource</h2>
+<h2 id="fetch-a-resource">Fetch a resource</h2>
+<h2 id="update-a-resource">Update a resource</h2>
+<h2 id="deprecate-a-resource">Deprecate a resource</h2>
 
                                 
                                 </section>
@@ -444,7 +475,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Resources","level":"1.2.4","depth":2,"next":{"title":"Files","level":"1.2.5","depth":2,"path":"python-sdk/files.md","ref":"python-sdk/files.md","articles":[]},"previous":{"title":"Projects","level":"1.2.3","depth":2,"path":"python-sdk/projects.md","ref":"python-sdk/projects.md","articles":[]},"dir":"ltr"},"config":{"plugins":["insert-logo","favicon","expandable-chapters","hide-published-with","livereload"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"hide-published-with":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":{"shortcut":"/images/favicon.png","bookmark":"/images/favicon.png","appleTouch":"/images/favicon.png","appleTouchMore":{"120x120":"/images/favicon.png","180x180":"/images/favicon.png"}},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"https://bluebrain.github.io/nexus/assets/img/logo.png"},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Nexus SDK and CLI","gitbook":"*"},"file":{"path":"python-sdk/resources.md","mtime":"2019-01-16T12:06:33.361Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-01-18T12:40:06.555Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Resources","level":"1.2.4","depth":2,"next":{"title":"Files","level":"1.2.5","depth":2,"path":"python-sdk/files.md","ref":"python-sdk/files.md","articles":[]},"previous":{"title":"Projects","level":"1.2.3","depth":2,"path":"python-sdk/projects.md","ref":"python-sdk/projects.md","articles":[]},"dir":"ltr"},"config":{"plugins":["insert-logo","favicon","expandable-chapters","hide-published-with","livereload"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"hide-published-with":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":{"shortcut":"/images/favicon.png","bookmark":"/images/favicon.png","appleTouch":"/images/favicon.png","appleTouchMore":{"120x120":"/images/favicon.png","180x180":"/images/favicon.png"}},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"https://bluebrain.github.io/nexus/assets/img/logo.png"},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Nexus SDK and CLI","gitbook":"*"},"file":{"path":"python-sdk/resources.md","mtime":"2019-01-21T14:57:33.685Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-01-18T12:40:06.555Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

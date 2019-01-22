@@ -29,8 +29,6 @@ nexus.tools.pretty_print(my_payload)
 In addition, you can specify some optional arguments:
 - **pagination_from** *int*: Index of the list to start from (default: *0*)
 - **pagination_size** *int*: Size of the list (default: *20*)
-- **deprecated** *boolean*: Lists only the deprecated if *True*, lists only the non-deprecated if *False*, lists everything if not provided or *None* (default: *None*)
-- **full_text_search_query** *string*: List only the orgs that match this query (default: *None*)
 
 The response payload returned as a Python dictionary is the list of organizations just like mentioned in the [REST API doc](https://bluebrain.github.io/nexus/docs/api/admin/admin-orgs-api.html#list-organizations).
 
@@ -65,16 +63,16 @@ other_payload = nexus.organization.update(payload)
 # pretty print
 nexus.tools.pretty_print(other_payload)
 ```
-**IMPORTANT:** At the moment you modify the first payload, you should not use it for anything else as the *revision number* will not be updated. To get the trully updated version of the organization, **you must fetch it again**.
+**IMPORTANT:** At the moment you modify the first payload, you should not use it for anything else as the *revision number* will not be updated. To get the truly updated version of the organization, **you must fetch it again**.
 
 ## Deprecate an organisation
 Nexus does not allow deleting, but it allows deprecating. Flagging an organization as *deprecated* prevent any adding of project.
 
 ```python
-previous_rev = 1
-payload = nexus.organization.deprecate("my_org", previous_rev)
+rev = 1
+payload = nexus.organization.deprecate("my_org", rev)
 
 # pretty print
 nexus.tools.pretty_print(payload)
 ```
-Providing the *previous_rev* is mandatory as it ensures the user is fully aware of what he is deprecating.
+Providing the *rev* is mandatory as it ensures the user is fully aware of what he is deprecating.

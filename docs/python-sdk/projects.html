@@ -411,7 +411,9 @@ nexus.tools.pretty_print(payload)
 <p>In this example, <code>&quot;my_org&quot;</code> is the name of the organization that will host the project. The organization must exist. The second argument: <code>&quot;my_project&quot;</code> is the name you want to give to your project.</p>
 <p>In addition, the <code>.create()</code> function can take an optional argument:</p>
 <ul>
-<li><strong>config</strong> <em>dict</em>: Can include data such as <code>name</code>, <code>base</code> or <code>apiMappings</code> see the <a href="https://bluebrain.github.io/nexus/docs/api/admin/admin-projects-api.html#create-a-project" target="_blank">API doc</a> for more info</li>
+<li><strong>description</strong> <em>string</em>: if you want to provide a description to your project</li>
+<li><strong>api_mappings</strong> <em>list</em>: custom api mapping, see more <a href="https://bluebrain.github.io/nexus/docs/api/admin/admin-projects-api.html#api-mappings" target="_blank">here</a></li>
+<li><strong>vocab</strong> <em>string</em>: vocab string</li>
 </ul>
 <h2 id="list-projects">List projects</h2>
 <p>Generally, you will want to list the project of a certain <em>organization</em>, but you can also list all the projects available within the entire environment.  </p>
@@ -437,7 +439,7 @@ nexus.tools.pretty_print(payload)
 <li><strong>full_text_search_query</strong> <em>string</em>: List only the orgs that match this query (default: <em>None</em>)</li>
 </ul>
 <p>The returned value is a <em>dictionary</em> containing the list of projects.<br><strong>Note</strong> that each project entry contains partial informations about each project. To the whole set of data for a given project, use the <a href="organizations.html#fetch-a-project"><code>.fetch()</code></a> function.</p>
-<h1 id="fetch-a-project">Fetch a project</h1>
+<h2 id="fetch-a-project">Fetch a project</h2>
 <p>Fetching a project means getting all the data and metadata related to this particular project. Though, it does <strong>not</strong> fetch the resources bound to this project (to fetch resource, go to the <a href="resource.md">resource section</a>).</p>
 <p>Since a project belongs to an organization, the <code>.fetch()</code> function requires this information:</p>
 <pre><code class="lang-python">payload = nexus.projects.fetch(<span class="hljs-string">&quot;my_org&quot;</span>, <span class="hljs-string">&quot;my_project&quot;</span>)
@@ -448,6 +450,41 @@ nexus.tools.pretty_print(payload)
 <p>Additionally, you can use:</p>
 <ul>
 <li><strong>rev</strong> <em>int</em>: The specific <a href="../GLOSSARY.html#revision" class="glossary-term" title="A revision is a version number, incremented every-time a entity is updated.">revision</a> of the wanted project. If not provided, will get the last</li>
+</ul>
+<h2 id="update-a-project">Update a project</h2>
+<p>To update q project, yo must first <code>.fetch()</code> it. Then, you can modify the <a href="../GLOSSARY.html#payload" class="glossary-term" title="A payload is a general term to define a message. It can be a message that is sent or a message that is received. In the later case, we will generally talk about response payload. Most of the time, a payload comes as JSON structure and is then translated into a Python dictionary, a Javascript object (depending on the language of choice).">payload</a> to update the dictionary fields you want to change, and then inject this modified dictionary into the <code>.update()</code> function:</p>
+<pre><code class="lang-python"><span class="hljs-comment"># Needed as a prior step</span>
+project_payload = nexus.projects.fetch(<span class="hljs-string">&quot;my_org&quot;</span>, <span class="hljs-string">&quot;my_project&quot;</span>)
+
+<span class="hljs-comment"># Add some edits to the project data</span>
+project_payload[<span class="hljs-string">&quot;apiMappings&quot;</span>] = [<span class="hljs-string">&quot;the&quot;</span>, <span class="hljs-string">&quot;foo&quot;</span>, <span class="hljs-string">&quot;bar&quot;</span>, <span class="hljs-string">&quot;of&quot;</span>, <span class="hljs-string">&quot;john&quot;</span>, <span class="hljs-string">&quot;doe&quot;</span>]
+
+<span class="hljs-comment"># finally, you update</span>
+payload = nexus.projects.update(project_payload)
+
+<span class="hljs-comment"># pretty print</span>
+nexus.tools.pretty_print(payload)
+</code></pre>
+<p>In addition, you can specify:</p>
+<ul>
+<li><strong>rev</strong> <em>int</em>: The API needs to make sure you are modifying the last <a href="../GLOSSARY.html#revision" class="glossary-term" title="A revision is a version number, incremented every-time a entity is updated.">revision</a> of the project. The SDK makes this optional by looking into the <a href="../GLOSSARY.html#payload" class="glossary-term" title="A payload is a general term to define a message. It can be a message that is sent or a message that is received. In the later case, we will generally talk about response payload. Most of the time, a payload comes as JSON structure and is then translated into a Python dictionary, a Javascript object (depending on the language of choice).">payload</a> provided in argument.</li>
+</ul>
+<p><strong>IMPORTANT:</strong> At the moment you modify the first <a href="../GLOSSARY.html#payload" class="glossary-term" title="A payload is a general term to define a message. It can be a message that is sent or a message that is received. In the later case, we will generally talk about response payload. Most of the time, a payload comes as JSON structure and is then translated into a Python dictionary, a Javascript object (depending on the language of choice).">payload</a>, you should not use it for anything else as the <em><a href="../GLOSSARY.html#revision" class="glossary-term" title="A revision is a version number, incremented every-time a entity is updated.">revision</a> number</em> will not be updated. To get the truly updated version of the project, <strong>you must fetch it again</strong>.</p>
+<h2 id="deprecate-a-project">Deprecate a project</h2>
+<p>Nexus does not allow to delete anything, including projects. Deprecating a project simply makes it un-writable and resources can no longer be added to a deprecated project.</p>
+<p>Exactly like for <code>.update()</code>, you need first to provide a <code>.fetch()ed</code> <a href="../GLOSSARY.html#payload" class="glossary-term" title="A payload is a general term to define a message. It can be a message that is sent or a message that is received. In the later case, we will generally talk about response payload. Most of the time, a payload comes as JSON structure and is then translated into a Python dictionary, a Javascript object (depending on the language of choice).">payload</a> of a <em>project</em>:</p>
+<pre><code class="lang-python"><span class="hljs-comment"># Needed as a prior step</span>
+payload = nexus.projects.fetch(<span class="hljs-string">&quot;my_org&quot;</span>, <span class="hljs-string">&quot;my_project&quot;</span>)
+
+<span class="hljs-comment"># then, deprecate it</span>
+payload = nexus.projects.update(payload)
+
+<span class="hljs-comment"># pretty print</span>
+nexus.tools.pretty_print(payload)
+</code></pre>
+<p>In addition, the <code>.update()</code> function can take the optional argument:</p>
+<ul>
+<li><strong>rev</strong> <em>int</em>: The API needs to make sure you are deprecating the last <a href="../GLOSSARY.html#revision" class="glossary-term" title="A revision is a version number, incremented every-time a entity is updated.">revision</a> of the project. The SDK makes this optional by looking into the <a href="../GLOSSARY.html#payload" class="glossary-term" title="A payload is a general term to define a message. It can be a message that is sent or a message that is received. In the later case, we will generally talk about response payload. Most of the time, a payload comes as JSON structure and is then translated into a Python dictionary, a Javascript object (depending on the language of choice).">payload</a> provided in argument.</li>
 </ul>
 
                                 
@@ -492,7 +529,7 @@ nexus.tools.pretty_print(payload)
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Projects","level":"1.2.3","depth":2,"next":{"title":"Resources","level":"1.2.4","depth":2,"path":"python-sdk/resources.md","ref":"python-sdk/resources.md","articles":[]},"previous":{"title":"Organizations","level":"1.2.2","depth":2,"path":"python-sdk/organizations.md","ref":"python-sdk/organizations.md","articles":[]},"dir":"ltr"},"config":{"plugins":["insert-logo","favicon","expandable-chapters","hide-published-with","livereload"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"hide-published-with":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":{"shortcut":"/images/favicon.png","bookmark":"/images/favicon.png","appleTouch":"/images/favicon.png","appleTouchMore":{"120x120":"/images/favicon.png","180x180":"/images/favicon.png"}},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"https://bluebrain.github.io/nexus/assets/img/logo.png"},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Nexus SDK and CLI","gitbook":"*"},"file":{"path":"python-sdk/projects.md","mtime":"2019-01-21T09:33:51.321Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-01-18T12:40:06.555Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Projects","level":"1.2.3","depth":2,"next":{"title":"Resources","level":"1.2.4","depth":2,"path":"python-sdk/resources.md","ref":"python-sdk/resources.md","articles":[]},"previous":{"title":"Organizations","level":"1.2.2","depth":2,"path":"python-sdk/organizations.md","ref":"python-sdk/organizations.md","articles":[]},"dir":"ltr"},"config":{"plugins":["insert-logo","favicon","expandable-chapters","hide-published-with","livereload"],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"hide-published-with":{},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":{"shortcut":"/images/favicon.png","bookmark":"/images/favicon.png","appleTouch":"/images/favicon.png","appleTouchMore":{"120x120":"/images/favicon.png","180x180":"/images/favicon.png"}},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"https://bluebrain.github.io/nexus/assets/img/logo.png"},"expandable-chapters":{}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Nexus SDK and CLI","gitbook":"*"},"file":{"path":"python-sdk/projects.md","mtime":"2019-01-22T14:18:06.298Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-01-18T12:40:06.555Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
